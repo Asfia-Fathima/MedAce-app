@@ -1,5 +1,5 @@
 import streamlit as st
-import PyPDF2  # type: ignore
+import PyPDF2
 import pandas as pd
 from PIL import Image
 import io
@@ -7,9 +7,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import easyocr
 
-def extract_text_easyocr(image):
+# OCR function - fixed to accept image bytes
+def extract_text_easyocr(image_bytes):
     reader = easyocr.Reader(['en'], gpu=False)
-    result = reader.readtext(image, detail=0)
+    result = reader.readtext(image_bytes, detail=0)
     return "\n".join(result)
 
 # Page settings
@@ -42,7 +43,7 @@ with right_col:
         if report_text:
             st.text_area("Full Report Text", report_text, height=300)
         else:
-            st.warning("No readable text extracted yet. Please upload a valid file.")
+            st.warning("Scroll Below for Extracted text")
 
         st.markdown("### Trends Over Time:")
         st.info("Once you upload more reports, we'll show your health trends here.")
@@ -130,13 +131,18 @@ if uploaded_file:
 
     # Image files
     elif file_name.endswith((".png", ".jpg", ".jpeg")):
-        image = Image.open(uploaded_file)
         st.markdown("📸 Uploaded Image:")
-        st.image(image, caption=uploaded_file.name, use_container_width=True)
+        st.image(uploaded_file, caption=uploaded_file.name, use_container_width=True)
 
         with st.spinner("🔍 Extracting text from image using OCR..."):
             try:
-                text = extract_text_easyocr(uploaded_file)
+                # Convert image to bytes for easyocr
+                image = Image.open(uploaded_file).convert("RGB")
+                image_bytes = io.BytesIO()
+                image.save(image_bytes, format="JPEG")
+                image_bytes = image_bytes.getvalue()
+
+                text = extract_text_easyocr(image_bytes)
                 st.session_state["report_text"] = text
                 st.success("✅ Text extraction complete!")
                 with st.expander("📝 Extracted Text"):
@@ -156,7 +162,7 @@ with st.sidebar:
     chatbot_on = st.checkbox("💬 Chat with MedAce")
     st.button("My Report History (coming soon)")
     st.divider()
-    st.markdown("Need help? [Contact us](mailto:support@medace.ai)")
+    st.markdown("Need help? [Contact us](mailto:fathimasfia09@gmail.com)")
 
 # ---- Chatbot Feature ----
 if 'chatbot_on' in locals() and chatbot_on:
