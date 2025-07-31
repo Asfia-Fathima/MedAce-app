@@ -1,16 +1,16 @@
 ⚠️ IMPORTANT NOTICE FOR FUTURE CONTRIBUTORS & USERS
-Welcome to MedAce – a smart, AI-assisted medical companion built using Streamlit and integrated with LLMs via API.
+Welcome to MedAce – a smart,AI-assisted medical companion built using Streamlit and integrated with LLMs via API.
 
 #  Security First: Handle Secrets Responsibly
 This project uses API keys stored in .streamlit/secrets.toml. Do NOT commit this file to GitHub or any public VCS.
 
 Always add .streamlit/secrets.toml to .gitignore
 
-Never hardcode secrets inside Python files
+Never hardcoode secrets inside Python files
 
 For deployment, use environment variables or secrets.toml in Streamlit Cloud only
 
-If a secret accidentally gets committed:
+If a secret acidentally gets committed:
 
 Revoke it immediately
 
@@ -44,4 +44,4 @@ Sanitize all config files before making your repo public
 Review dependencies in requirements.txt to avoid security vulnerabilities
 
 “With great AI comes great responsibility.”
-— Future You
+—Amisstrie
